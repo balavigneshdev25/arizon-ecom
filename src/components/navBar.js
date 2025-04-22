@@ -35,13 +35,13 @@ export default function NavBar() {
           <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-0">
             <div className="text-xl font-bold text-gray-800">
               <Link href="/">
-              <Image
-                src="/assets/logoecom.png"
-                alt="logo"
-                width={100}
-                height={100}
-                className="w-16 sm:w-24 md:w-28 lg:w-36"
-              />
+                <Image
+                  src="/assets/logoecom.png"
+                  alt="logo"
+                  width={100}
+                  height={100}
+                  className="w-16 sm:w-24 md:w-28 lg:w-36"
+                />
               </Link>
             </div>
 
@@ -54,7 +54,9 @@ export default function NavBar() {
               <div className=" flex items-center gap-1.5 text-gray-700 hover:text-black cursor-pointer">
                 {/* Cart Icon with Badge */}
                 <div className="relative">
-                  <HiOutlineShoppingCart className="text-2xl" />
+                  <Link href="/checkout">
+                    <HiOutlineShoppingCart className="text-2xl" />
+                  </Link>
                   {cart?.length > 0 && (
                     <span className="absolute -top-1.5 -right-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full leading-none font-bold">
                       {cart.length}
