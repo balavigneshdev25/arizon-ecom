@@ -13,7 +13,7 @@ const isInCart = (cart, productId) =>
 
 export default function ProductDetailsPage({ params }) {
   const { id } = use(params);
-  const router = useRouter()
+  const router = useRouter();
 
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
@@ -46,10 +46,8 @@ export default function ProductDetailsPage({ params }) {
       <div className="p-6 max-w-7xl mx-auto">
         {loading ? (
           <div className="flex flex-col lg:flex-row gap-10 items-center lg:items-start animate-pulse">
-            {/* Image Skeleton */}
             <div className="w-full max-w-sm lg:max-w-md h-[400px] bg-gray-200 rounded-xl" />
 
-            {/* Details Skeleton */}
             <div className="flex-1 space-y-4 w-full">
               <div className="h-6 bg-gray-200 rounded w-3/4" />
               <div className="h-4 bg-gray-200 rounded w-1/4" />
@@ -61,7 +59,6 @@ export default function ProductDetailsPage({ params }) {
           </div>
         ) : (
           <div className="flex flex-col lg:flex-row gap-10 items-center lg:items-start">
-            {/* Product Image */}
             <div className="w-full max-w-sm lg:max-w-md group overflow-hidden rounded-xl  shadow">
               <div className="relative w-full aspect-square overflow-hidden">
                 <Image
@@ -73,7 +70,6 @@ export default function ProductDetailsPage({ params }) {
               </div>
             </div>
 
-            {/* Product Details */}
             <div className="flex-1 space-y-4">
               <h1 className="text-2xl font-semibold text-gray-800">
                 {product.title}
@@ -104,7 +100,6 @@ export default function ProductDetailsPage({ params }) {
               </div>
 
               <div className="flex flex-col sm:flex-row sm:space-x-4 sm:items-center">
-                {/* Add to Cart / Remove from Cart Button */}
                 <button
                   onClick={() => handleToggleCart(product)}
                   className={`flex-1 sm:flex-none min-w-[150px] px-6 py-2 ${
@@ -113,18 +108,15 @@ export default function ProductDetailsPage({ params }) {
                       : "bg-green-600 hover:bg-green-700"
                   } transition text-white text-sm rounded-lg cursor-pointer`}
                 >
-                  {isInCart(cart, product.id)
-                    ? "Remove Item"
-                    : "Add to Cart"}
+                  {isInCart(cart, product.id) ? "Remove Item" : "Add to Cart"}
                 </button>
 
-                {/* Checkout Button, visible only when product is in cart */}
                 {isInCart(cart, product.id) && (
                   <button
-                    onClick={() => router.push("/checkout")} // Navigate to checkout page
+                    onClick={() => router.push("/viewcart")}
                     className="mt-4 sm:mt-0 sm:w-auto w-full px-6 py-2 bg-[#1A2348] text-white text-sm rounded-lg cursor-pointer transition hover:bg-[#16203a]"
                   >
-                    Go to Checkout
+                    View Cart
                   </button>
                 )}
               </div>

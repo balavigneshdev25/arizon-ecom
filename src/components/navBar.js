@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { IoIosArrowDown } from "react-icons/io";
-import { FaPhone, FaPhoneAlt, FaUserCircle } from "react-icons/fa";
+import { FaPhoneAlt, FaUserCircle } from "react-icons/fa";
 import { HiOutlineShoppingCart, HiOutlineTrash } from "react-icons/hi";
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromCart } from "@/app/redux/features/cartSlice";
@@ -23,16 +23,19 @@ export default function Navbar() {
   return (
     <>
       <header className="w-full z-50 fixed top-0 left-0">
-        {/* First Row */}
         <div className="flex justify-end items-center bg-black text-white py-2 px-4">
           <div className="ml-4">
             <Link href="#">
-              <span className="text-sm cursor-pointer hover:underline">About Us</span>
+              <span className="text-sm cursor-pointer hover:underline">
+                About Us
+              </span>
             </Link>
           </div>
           <div className="ml-4">
             <Link href="#">
-              <span className="text-sm cursor-pointer hover:underline">Contact Us</span>
+              <span className="text-sm cursor-pointer hover:underline">
+                Contact Us
+              </span>
             </Link>
           </div>
           <div className="ml-4 flex items-center gap-1">
@@ -41,9 +44,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Second Row */}
         <div className="relative flex items-center justify-between w-full py-3 bg-white px-4">
-          {/* Left side: hamburger + logo (desktop view) */}
           <div className="flex items-center md:gap-4 gap-0 md:w-auto w-1/3">
             <button
               className="md:hidden text-2xl text-black"
@@ -51,7 +52,6 @@ export default function Navbar() {
             >
               ☰
             </button>
-            {/* Logo - visible in desktop normally, centered in mobile */}
             <div className="hidden md:block ml-4">
               <Link href="/">
                 <Image
@@ -65,7 +65,6 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Centered logo only on mobile */}
           <div className="block md:hidden absolute left-1/2 transform -translate-x-1/2">
             <Link href="/">
               <Image
@@ -78,13 +77,12 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Right side: signin + cart */}
           <div className="flex items-center gap-4 md:w-auto w-1/3 justify-end">
-            <Link href="/signin">
+            <div>
               <FaUserCircle className="text-gray-600 text-xl" />
-            </Link>
+            </div>
             <div className="relative group">
-              <Link href="/checkout">
+              <Link href="/viewcart">
                 <HiOutlineShoppingCart className="text-2xl text-gray-800" />
               </Link>
               {cart?.length > 0 && (
@@ -96,7 +94,10 @@ export default function Navbar() {
                 <div className="absolute right-0 w-80 bg-white border rounded-xl shadow-lg z-50 hidden group-hover:block">
                   <div className="max-h-60 overflow-y-auto divide-y">
                     {cart.map((item, index) => (
-                      <div key={index} className="flex items-center justify-between px-4 py-3">
+                      <div
+                        key={index}
+                        className="flex items-center justify-between px-4 py-3"
+                      >
                         <div className="flex items-center gap-3">
                           <Image
                             src={item.image}
@@ -119,8 +120,8 @@ export default function Navbar() {
                     ))}
                   </div>
                   <div className="px-4 py-3 border-t">
-                    <Link href="/checkout">
-                      <button className="w-full bg-black text-white text-sm font-semibold py-2 rounded-lg hover:bg-gray-800">
+                    <Link href="/viewcart">
+                      <button className="w-full cursor-pointer bg-black text-white text-sm font-semibold py-2 rounded-lg hover:bg-gray-800">
                         View Cart
                       </button>
                     </Link>
@@ -131,7 +132,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Third Row - Desktop Menu */}
+        {/* ///////// Desktop Menu ///////////////*/}
         <div
           className={`md:flex items-center justify-center gap-6 hidden py-4 bg-[#1A2348] text-white ${
             menuOpen ? "block" : "hidden"
@@ -152,7 +153,9 @@ export default function Navbar() {
                 <div className="absolute top-full left-0 w-[400px] bg-white border rounded-xl shadow-md p-4 z-50 grid grid-cols-2 gap-4">
                   {menu.submenu.map((category, idx) => (
                     <div key={idx}>
-                      <p className="font-bold text-sm text-gray-700 mb-2">{category.header}</p>
+                      <p className="font-bold text-sm text-gray-700 mb-2">
+                        {category.header}
+                      </p>
                       <ul className="space-y-1">
                         {category.subitems.map((sub, j) => (
                           <li key={j}>
@@ -173,7 +176,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Mobile Menu */}
+        {/*//////////////////////////// Mobile Menu //////////////*/}
         {menuOpen && (
           <ul className="md:hidden px-4 pb-4 bg-[#1A2348] text-white border-t space-y-3">
             {menuItems.map((menu, i) => (
@@ -193,15 +196,15 @@ export default function Navbar() {
                   <ul className="mt-2 ml-4 space-y-1">
                     {menu.submenu.map((cat, idx) => (
                       <div key={idx}>
-                        <p className="font-bold text-sm text-gray-700 mt-2">{cat.header}</p>
+                        <p className="font-bold text-sm text-white mt-2">
+                          {cat.header}
+                        </p>
                         <ul className="ml-2 space-y-1">
                           {cat.subitems.map((sub, j) => (
                             <li key={j}>
                               <Link
-                                href={`/${menu.title.toLowerCase()}/${cat.header
-                                  .toLowerCase()
-                                  .replace(/ /g, "-")}/${sub.toLowerCase().replace(/ /g, "-")}`}
-                                className="text-white hover:text-black text-sm"
+                                href={`/products`}
+                                className="text-white hover:text-white text-sm"
                               >
                                 {sub}
                               </Link>
