@@ -5,7 +5,6 @@ import { IoIosStar } from "react-icons/io";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import NavBar from "@/components/navBar";
 import { addToCart, removeFromCart } from "../redux/features/cartSlice";
 
 const isInCart = (cart, productId) =>
@@ -20,7 +19,6 @@ export default function Products() {
   }, []);
 
   const router = useRouter();
-
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.items);
 
@@ -41,9 +39,8 @@ export default function Products() {
 
   return (
     <div>
-      <NavBar />
       <div className="p-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {loading
             ? Array.from({ length: 8 }).map((_, i) => (
                 <div
@@ -89,24 +86,23 @@ export default function Products() {
                     <p className="text-base font-bold text-blue-600">
                       ${product.price}
                     </p>
-
-                    <div className="flex flex-wrap sm:flex-nowrap justify-center w-full gap-3 sm:gap-4">
+                    <div className="flex flex-col lg:flex-row gap-3 lg:gap-4 justify-center w-full">
                       <button
                         onClick={() => router.push(`/products/${product.id}`)}
-                        className="flex-1 sm:flex-none px-4 py-2 min-w-[150px] bg-blue-600 cursor-pointer text-white text-sm rounded-lg hover:bg-blue-700 transition"
+                        className="w-full lg:w-auto px-4 py-2 min-w-[150px] bg-[#1A2348] cursor-pointer text-white text-sm rounded-lg hover:bg-[#1A2348] transition"
                       >
-                        View Details
+                        View
                       </button>
                       <button
                         onClick={() => handleToggleCart(product)}
-                        className={`flex-1 sm:flex-none min-w-[150px] px-6 py-2 ${
+                        className={`w-full lg:w-auto min-w-[150px] px-6 py-2 ${
                           isInCart(cart, product.id)
                             ? "bg-red-600 hover:bg-red-700"
                             : "bg-green-600 hover:bg-green-700"
                         } transition text-white text-sm rounded-lg cursor-pointer`}
                       >
                         {isInCart(cart, product.id)
-                          ? "Remove from Cart"
+                          ? "Remove item"
                           : "Add to Cart"}
                       </button>
                     </div>

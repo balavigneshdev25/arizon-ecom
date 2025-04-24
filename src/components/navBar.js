@@ -1,120 +1,223 @@
-import React from "react";
-import { FaPhone } from "react-icons/fa6";
-import { FaTelegramPlane } from "react-icons/fa";
-import { FaShoppingBag } from "react-icons/fa";
-import { FaUserCircle } from "react-icons/fa";
-import { HiOutlineShoppingCart, HiOutlineTrash } from "react-icons/hi";
-import Image from "next/image";
-import { useDispatch, useSelector } from "react-redux";
-import { removeFromCart } from "@/app/redux/features/cartSlice";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { IoIosArrowDown } from "react-icons/io";
+import { FaPhone, FaPhoneAlt, FaUserCircle } from "react-icons/fa";
+import { HiOutlineShoppingCart, HiOutlineTrash } from "react-icons/hi";
+import { useSelector, useDispatch } from "react-redux";
+import { removeFromCart } from "@/app/redux/features/cartSlice";
+import { menuItems } from "@/constant/menuItem";
 
-export default function NavBar() {
-  const BarData = [
-    { Icon: <FaPhone />, value: "+123 456 789" },
-    { Icon: <FaTelegramPlane />, value: "sample@gmail.com" },
-    { Icon: <FaShoppingBag />, value: "Free shipping & Free Returns" },
-  ];
-
-  const dispatch = useDispatch();
+export default function Navbar() {
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const cart = useSelector((state) => state.cart.items);
+  const dispatch = useDispatch();
+
+  const toggleDropdown = (menu) => {
+    setOpenDropdown(openDropdown === menu ? null : menu);
+  };
 
   return (
     <>
-      <div className="fixed top-0 left-0 w-full z-50">
-        <div className="bg-black p-1.5 hidden md:flex justify-around">
-          {BarData?.map((item, i) => (
-            <div key={i} className="flex gap-2.5 items-center">
-              <p className="text-white">{item.Icon}</p>
-              <p className="text-white">{item.value}</p>
-            </div>
-          ))}
+      <header className="w-full z-50 fixed top-0 left-0">
+        {/* First Row */}
+        <div className="flex justify-end items-center bg-black text-white py-2 px-4">
+          <div className="ml-4">
+            <Link href="#">
+              <span className="text-sm cursor-pointer hover:underline">About Us</span>
+            </Link>
+          </div>
+          <div className="ml-4">
+            <Link href="#">
+              <span className="text-sm cursor-pointer hover:underline">Contact Us</span>
+            </Link>
+          </div>
+          <div className="ml-4 flex items-center gap-1">
+            <FaPhoneAlt className="text-sm" />
+            <span>123 456 789</span>
+          </div>
         </div>
 
-        <nav className="bg-gradient-to-r from-cyan-600 via-teal-500 to-emerald-400 text-white shadow-md px-4 py-3">
-          <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-0">
-            <div className="text-xl font-bold text-gray-800">
+        {/* Second Row */}
+        <div className="relative flex items-center justify-between w-full py-3 bg-white px-4">
+          {/* Left side: hamburger + logo (desktop view) */}
+          <div className="flex items-center md:gap-4 gap-0 md:w-auto w-1/3">
+            <button
+              className="md:hidden text-2xl text-black"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              ☰
+            </button>
+            {/* Logo - visible in desktop normally, centered in mobile */}
+            <div className="hidden md:block ml-4">
               <Link href="/">
                 <Image
                   src="/assets/logoecom.png"
                   alt="logo"
-                  width={100}
-                  height={100}
-                  className="w-16 sm:w-24 md:w-28 lg:w-36"
+                  width={120}
+                  height={40}
+                  className="object-contain"
                 />
               </Link>
             </div>
+          </div>
 
-            <div className="relative group flex flex-col md:flex-row gap-4 md:gap-6 items-start md:items-center">
-              <div className="flex gap-1.5 items-center text-gray-700 hover:text-black cursor-pointer">
-                <FaUserCircle className="text-xl" />
-                <p className="text-sm">Sign in / Sign up</p>
-              </div>
+          {/* Centered logo only on mobile */}
+          <div className="block md:hidden absolute left-1/2 transform -translate-x-1/2">
+            <Link href="/">
+              <Image
+                src="/assets/logoecom.png"
+                alt="logo"
+                width={120}
+                height={40}
+                className="object-contain"
+              />
+            </Link>
+          </div>
 
-              <div className=" flex items-center gap-1.5 text-gray-700 hover:text-black cursor-pointer">
-                {/* Cart Icon with Badge */}
-                <div className="relative">
-                  <Link href="/checkout">
-                    <HiOutlineShoppingCart className="text-2xl" />
-                  </Link>
-                  {cart?.length > 0 && (
-                    <span className="absolute -top-1.5 -right-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full leading-none font-bold">
-                      {cart.length}
-                    </span>
-                  )}
-                </div>
-                <p className="text-sm font-medium">Cart</p>
-
-                {cart?.length > 0 && (
-                  <div
-                    className="absolute top-full right-0 mt-3 w-80 bg-white border border-gray-200 rounded-xl shadow-lg z-50 
-                    opacity-0 pointer-events-none transition-all duration-300 ease-in-out 
-                    hidden md:group-hover:block md:opacity-100 md:pointer-events-auto"
-                  >
-                    <div className="max-h-60 overflow-y-auto divide-y divide-gray-100">
-                      {cart.map((item, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between px-4 py-3"
-                        >
-                          <div className="flex items-center gap-3">
-                            <Image
-                              src={item.image}
-                              alt={"img"}
-                              height={50}
-                              width={50}
-                              className="w-12 h-12 object-cover rounded-md border border-gray-200"
-                            />
-                            <span className="text-sm font-medium text-gray-800">
-                              {item.title}
-                            </span>
-                          </div>
-                          <button
-                            onClick={() => dispatch(removeFromCart(item))}
-                            className="text-red-500 cursor-pointer hover:text-red-700"
-                            title="Remove"
-                          >
-                            <HiOutlineTrash className="text-lg" />
-                          </button>
+          {/* Right side: signin + cart */}
+          <div className="flex items-center gap-4 md:w-auto w-1/3 justify-end">
+            <Link href="/signin">
+              <FaUserCircle className="text-gray-600 text-xl" />
+            </Link>
+            <div className="relative group">
+              <Link href="/checkout">
+                <HiOutlineShoppingCart className="text-2xl text-gray-800" />
+              </Link>
+              {cart?.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+                  {cart.length}
+                </span>
+              )}
+              {cart?.length > 0 && (
+                <div className="absolute right-0 w-80 bg-white border rounded-xl shadow-lg z-50 hidden group-hover:block">
+                  <div className="max-h-60 overflow-y-auto divide-y">
+                    {cart.map((item, index) => (
+                      <div key={index} className="flex items-center justify-between px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          <Image
+                            src={item.image}
+                            alt={item.title}
+                            width={50}
+                            height={50}
+                            className="w-12 h-12 object-cover rounded-md border"
+                          />
+                          <span className="text-sm font-medium text-gray-800">
+                            {item.title}
+                          </span>
                         </div>
-                      ))}
-                    </div>
-
-                    <div className="px-4 py-3 border-t border-gray-200">
-                      <Link href="/checkout">
-                        <button className="w-full bg-black text-white text-sm font-semibold py-2 rounded-lg hover:bg-gray-800 cursor-pointer transition">
-                          View Cart
+                        <button
+                          onClick={() => dispatch(removeFromCart(item))}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <HiOutlineTrash className="text-lg" />
                         </button>
-                      </Link>
-                    </div>
+                      </div>
+                    ))}
                   </div>
-                )}
-              </div>
+                  <div className="px-4 py-3 border-t">
+                    <Link href="/checkout">
+                      <button className="w-full bg-black text-white text-sm font-semibold py-2 rounded-lg hover:bg-gray-800">
+                        View Cart
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        </nav>
-      </div>
-      <div className="pt-[130px]" />
+        </div>
+
+        {/* Third Row - Desktop Menu */}
+        <div
+          className={`md:flex items-center justify-center gap-6 hidden py-4 bg-[#1A2348] text-white ${
+            menuOpen ? "block" : "hidden"
+          }`}
+        >
+          {menuItems.map((menu, i) => (
+            <li
+              key={i}
+              className="relative group text-sm font-semibold hover:text-teal-600 list-none"
+              onMouseEnter={() => setOpenDropdown(menu.title)}
+              onMouseLeave={() => setOpenDropdown(null)}
+            >
+              <div className="flex items-center gap-1 cursor-pointer">
+                {menu.title}
+                <IoIosArrowDown className="text-xs" />
+              </div>
+              {openDropdown === menu.title && (
+                <div className="absolute top-full left-0 w-[400px] bg-white border rounded-xl shadow-md p-4 z-50 grid grid-cols-2 gap-4">
+                  {menu.submenu.map((category, idx) => (
+                    <div key={idx}>
+                      <p className="font-bold text-sm text-gray-700 mb-2">{category.header}</p>
+                      <ul className="space-y-1">
+                        {category.subitems.map((sub, j) => (
+                          <li key={j}>
+                            <Link
+                              href={`/products`}
+                              className="text-gray-600 hover:text-black text-sm"
+                            >
+                              {sub}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </li>
+          ))}
+        </div>
+
+        {/* Mobile Menu */}
+        {menuOpen && (
+          <ul className="md:hidden px-4 pb-4 bg-[#1A2348] text-white border-t space-y-3">
+            {menuItems.map((menu, i) => (
+              <li key={i}>
+                <button
+                  className="flex justify-between w-full text-left font-semibold text-white"
+                  onClick={() => toggleDropdown(menu.title)}
+                >
+                  {menu.title}
+                  <IoIosArrowDown
+                    className={`ml-2 transform duration-200 ${
+                      openDropdown === menu.title ? "rotate-180" : "rotate-0"
+                    }`}
+                  />
+                </button>
+                {openDropdown === menu.title && (
+                  <ul className="mt-2 ml-4 space-y-1">
+                    {menu.submenu.map((cat, idx) => (
+                      <div key={idx}>
+                        <p className="font-bold text-sm text-gray-700 mt-2">{cat.header}</p>
+                        <ul className="ml-2 space-y-1">
+                          {cat.subitems.map((sub, j) => (
+                            <li key={j}>
+                              <Link
+                                href={`/${menu.title.toLowerCase()}/${cat.header
+                                  .toLowerCase()
+                                  .replace(/ /g, "-")}/${sub.toLowerCase().replace(/ /g, "-")}`}
+                                className="text-white hover:text-black text-sm"
+                              >
+                                {sub}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </header>
+      <div className="pt-[170px]" />
     </>
   );
 }

@@ -1,5 +1,4 @@
 "use client";
-import NavBar from "@/components/navBar";
 import Image from "next/image";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,7 +11,6 @@ export default function Checkout() {
 
   return (
     <div>
-      <NavBar />
       <div className="min-h-screen bg-gray-50 p-4 md:p-10">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row-reverse gap-8 lg:h-[calc(100vh-80px)]">
           <div className="w-full lg:w-1/3">

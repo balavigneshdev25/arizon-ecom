@@ -4,9 +4,16 @@ import { fetchProductDetailAPI } from "@/api/products";
 import Image from "next/image";
 import { IoIosStar } from "react-icons/io";
 import NavBar from "@/components/navBar";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, removeFromCart } from "@/app/redux/features/cartSlice";
+import { useRouter } from "next/navigation";
+
+const isInCart = (cart, productId) =>
+  cart?.some((item) => item.id === productId);
 
 export default function ProductDetailsPage({ params }) {
   const { id } = use(params);
+  const router = useRouter()
 
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
@@ -15,11 +22,22 @@ export default function ProductDetailsPage({ params }) {
     fetchData();
   }, []);
 
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart.items);
+
   const fetchData = () => {
     fetchProductDetailAPI(id).then((data) => {
       setProduct(data);
       setLoading(false);
     });
+  };
+
+  const handleToggleCart = (product) => {
+    if (isInCart(cart, product.id)) {
+      dispatch(removeFromCart(product));
+    } else {
+      dispatch(addToCart(product));
+    }
   };
 
   return (
@@ -85,9 +103,31 @@ export default function ProductDetailsPage({ params }) {
                 </p>
               </div>
 
-              <button className="mt-4 px-6 py-2 w-full sm:w-auto bg-green-600 hover:bg-green-700 transition text-white text-sm rounded-lg">
-                Add to Cart
-              </button>
+              <div className="flex flex-col sm:flex-row sm:space-x-4 sm:items-center">
+                {/* Add to Cart / Remove from Cart Button */}
+                <button
+                  onClick={() => handleToggleCart(product)}
+                  className={`flex-1 sm:flex-none min-w-[150px] px-6 py-2 ${
+                    isInCart(cart, product.id)
+                      ? "bg-red-600 hover:bg-red-700"
+                      : "bg-green-600 hover:bg-green-700"
+                  } transition text-white text-sm rounded-lg cursor-pointer`}
+                >
+                  {isInCart(cart, product.id)
+                    ? "Remove Item"
+                    : "Add to Cart"}
+                </button>
+
+                {/* Checkout Button, visible only when product is in cart */}
+                {isInCart(cart, product.id) && (
+                  <button
+                    onClick={() => router.push("/checkout")} // Navigate to checkout page
+                    className="mt-4 sm:mt-0 sm:w-auto w-full px-6 py-2 bg-[#1A2348] text-white text-sm rounded-lg cursor-pointer transition hover:bg-[#16203a]"
+                  >
+                    Go to Checkout
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         )}
