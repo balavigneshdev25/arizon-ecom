@@ -205,6 +205,9 @@ export default function Navbar() {
                               <Link
                                 href={`/products`}
                                 className="text-white hover:text-white text-sm"
+                                onClick={() => setTimeout(()=>{
+                                  setMenuOpen(!menuOpen)
+                                },1000)}
                               >
                                 {sub}
                               </Link>
