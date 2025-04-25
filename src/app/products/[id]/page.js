@@ -5,7 +5,7 @@ import Image from "next/image";
 import { IoIosStar } from "react-icons/io";
 import NavBar from "@/components/navBar";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, removeFromCart } from "@/app/redux/features/cartSlice";
+import { addToCart, decreaseQuantity, increaseQuantity, removeFromCart } from "@/app/redux/features/cartSlice";
 import { useRouter } from "next/navigation";
 
 const isInCart = (cart, productId) =>
@@ -24,6 +24,7 @@ export default function ProductDetailsPage({ params }) {
 
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.items);
+  const quantity = cart.find(val => val.id === product.id) ? cart.find(val => val.id === product.id).quantity : 1;
 
   const fetchData = () => {
     fetchProductDetailAPI(id).then((data) => {
@@ -42,7 +43,6 @@ export default function ProductDetailsPage({ params }) {
 
   return (
     <div>
-      <NavBar />
       <div className="p-6 max-w-7xl mx-auto">
         {loading ? (
           <div className="flex flex-col lg:flex-row gap-10 items-center lg:items-start animate-pulse">
@@ -98,7 +98,25 @@ export default function ProductDetailsPage({ params }) {
                   {product.description}
                 </p>
               </div>
-
+              {isInCart(cart, product.id) && (
+                <div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => dispatch(decreaseQuantity(product.id))}
+                      className="px-3 py-1 bg-gray-200 rounded cursor-pointer hover:bg-gray-300"
+                    >
+                      -
+                    </button>
+                    <span className="px-3">{quantity}</span>
+                    <button
+                      onClick={() => dispatch(increaseQuantity(product.id))}
+                      className="px-3 py-1 bg-gray-200 cursor-pointer rounded hover:bg-gray-300"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              )}
               <div className="flex flex-col sm:flex-row sm:space-x-4 sm:items-center">
                 <button
                   onClick={() => handleToggleCart(product)}

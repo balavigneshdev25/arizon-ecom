@@ -87,7 +87,7 @@ export default function Navbar() {
               </Link>
               {cart?.length > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
-                  {cart.length}
+                  {cart.reduce((total, item) => total + item.quantity, 0)}
                 </span>
               )}
               {cart?.length > 0 && (
@@ -106,9 +106,14 @@ export default function Navbar() {
                             height={50}
                             className="w-12 h-12 object-cover rounded-md border"
                           />
-                          <span className="text-sm font-medium text-gray-800">
-                            {item.title}
-                          </span>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium text-gray-800">
+                              {item.title}
+                            </span>
+                            <span className="text-xs font-bold text-gray-600">
+                              {item.quantity || 1} × ${item.price}
+                            </span>
+                          </div>
                         </div>
                         <button
                           onClick={() => dispatch(removeFromCart(item))}
@@ -205,9 +210,11 @@ export default function Navbar() {
                               <Link
                                 href={`/products`}
                                 className="text-white hover:text-white text-sm"
-                                onClick={() => setTimeout(()=>{
-                                  setMenuOpen(!menuOpen)
-                                },1000)}
+                                onClick={() =>
+                                  setTimeout(() => {
+                                    setMenuOpen(!menuOpen);
+                                  }, 1000)
+                                }
                               >
                                 {sub}
                               </Link>

@@ -7,8 +7,8 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../redux/features/cartSlice";
 
-const isInCart = (cart, productId) =>
-  cart?.some((item) => item.id === productId);
+// const isInCart = (cart, productId) =>
+//   cart?.some((item) => item.id === productId);
 
 export default function Products() {
   const [productsList, setProductsList] = useState([]);
@@ -22,13 +22,13 @@ export default function Products() {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.items);
 
-  const handleToggleCart = (product) => {
-    if (isInCart(cart, product.id)) {
-      dispatch(removeFromCart(product));
-    } else {
-      dispatch(addToCart(product));
-    }
-  };
+  // const handleToggleCart = (product) => {
+  //   if (isInCart(cart, product.id)) {
+  //     dispatch(removeFromCart(product));
+  //   } else {
+  //     dispatch(addToCart(product));
+  //   }
+  // };
 
   const fetchData = () => {
     fetcProductsAPI().then((data) => {
@@ -94,16 +94,10 @@ export default function Products() {
                         View
                       </button>
                       <button
-                        onClick={() => handleToggleCart(product)}
-                        className={`w-full lg:w-auto min-w-[150px] px-6 py-2 ${
-                          isInCart(cart, product.id)
-                            ? "bg-red-600 hover:bg-red-700"
-                            : "bg-green-600 hover:bg-green-700"
-                        } transition text-white text-sm rounded-lg cursor-pointer`}
+                        onClick={() => dispatch(addToCart(product))}
+                        className="w-full lg:w-auto min-w-[150px] px-6 py-2 bg-green-600 hover:bg-green-700 transition text-white text-sm rounded-lg cursor-pointer"
                       >
-                        {isInCart(cart, product.id)
-                          ? "Remove item"
-                          : "Add to Cart"}
+                        Add to Cart
                       </button>
                     </div>
                   </div>

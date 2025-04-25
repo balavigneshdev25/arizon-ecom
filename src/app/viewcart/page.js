@@ -2,12 +2,21 @@
 import Image from "next/image";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromCart } from "../redux/features/cartSlice";
+import {
+  removeFromCart,
+  increaseQuantity,
+  decreaseQuantity,
+} from "../redux/features/cartSlice";
 import { IoIosStar } from "react-icons/io";
 
 export default function Checkout() {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
+
+  const totalPrice = cartItems.reduce(
+    (acc, item) => acc + item.price * (item.quantity || 1),
+    0
+  );
 
   return (
     <div>
@@ -18,14 +27,7 @@ export default function Checkout() {
               <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
               <div className="flex justify-between text-lg font-medium mb-4">
                 <span>Total</span>
-                <span>
-                  $
-                  {cartItems.length > 0
-                    ? cartItems
-                        .reduce((acc, item) => acc + item.price, 0)
-                        .toFixed(2)
-                    : "0.00"}
-                </span>
+                <span>${totalPrice.toFixed(2)}</span>
               </div>
               <button
                 disabled={cartItems.length === 0}
@@ -67,13 +69,40 @@ export default function Checkout() {
                     </span>
                   </div>
 
-                  <p className="text-xl font-bold text-blue-600">
-                    ${item.price}
-                  </p>
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => dispatch(decreaseQuantity(item.id))}
+                        className="px-3 py-1 bg-gray-200 rounded cursor-pointer hover:bg-gray-300"
+                      >
+                        -
+                      </button>
+                      <span className="px-3">{item.quantity}</span>
+                      <button
+                        onClick={() => dispatch(increaseQuantity(item.id))}
+                        className="px-3 py-1 bg-gray-200 cursor-pointer rounded hover:bg-gray-300"
+                      >
+                        +
+                      </button>
+                    </div>
+
+                  
+                    <div>
+                      <p className="text-sm font-bold text-[#1A2348]">
+                        Price: ${item.price.toFixed(2)}
+                      </p>
+
+                      <p className="text-sm text-gray-600">
+                        {item.quantity} * ${item.price.toFixed(2)} = $
+                        {(item.quantity * item.price).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
                 </div>
+
                 <button
                   onClick={() => dispatch(removeFromCart(item))}
-                  className="mt-2 md:mt-0 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+                  className="mt-2 md:mt-0 w-full sm:w-auto cursor-pointer bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
                 >
                   Remove
                 </button>
